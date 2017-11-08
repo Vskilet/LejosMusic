@@ -1,11 +1,14 @@
 package lejos.music;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import lejos.hardware.Sound;
+import lejos.network.BroadcastManager;
 import lejos.network.BroadcastListener;
 
 public class Track implements BroadcastListener {
@@ -99,7 +102,7 @@ public class Track implements BroadcastListener {
 	/**
 	 * Play the track
 	 */
-	public void play() {
+	public void play(boolean coordinator) {
 		if(this.position < this.notes.size()) {
 			final Note note;
 			
@@ -109,7 +112,11 @@ public class Track implements BroadcastListener {
 			} else {
 				note = this.notes.get(this.position);
 			}
-			
+
+			if (coordinator){
+			    this.broadcast();
+            }
+
 			note.play(this.bpm, this.transpose);
 			this.time += note.getLen();
 			this.lastLen = note.getLen();
@@ -118,7 +125,27 @@ public class Track implements BroadcastListener {
 			this.position++;
 		}
 	}
-	
+
+    /**
+     * Broadcast the time
+     */
+    public void broadcast(){
+        BroadcastManager broadcast_manager = null;
+        try {
+            broadcast_manager = BroadcastManager.getInstance();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
+        byte[] message = ByteBuffer.allocate(4).putFloat(this.getTime()).array();
+
+        try {
+            broadcast_manager.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 	/**
 	 * @return <code>true</code> if the track is finished
 	 */
