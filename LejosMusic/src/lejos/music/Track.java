@@ -1,12 +1,14 @@
 package lejos.music;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import lejos.hardware.Sound;
+import lejos.network.BroadcastListener;
 
-public class Track {
+public class Track implements BroadcastListener {
 	private List<Note> notes = new ArrayList<>();
 	
 	private int bpm = 60;
@@ -131,4 +133,13 @@ public class Track {
 		this.position = 0;
 		this.time = 0;
 	}
+
+    @Override
+    public void onBroadcastReceived(byte[] message) {
+        float DT = 0;
+        float received_time = ByteBuffer.wrap(message).getFloat();
+        if ((received_time - DT) > this.time){
+            setTime(received_time);
+        }
+    }
 }
