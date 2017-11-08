@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import lejos.hardware.Sound;
+import lejos.hardware.lcd.LCD;
 import lejos.network.BroadcastManager;
 import lejos.network.BroadcastListener;
 
@@ -163,10 +164,17 @@ public class Track implements BroadcastListener {
 
     @Override
     public void onBroadcastReceived(byte[] message) {
-        float DT = 0;
+        float DT = 0.1f;
         float received_time = ByteBuffer.wrap(message).getFloat();
-        if ((received_time - DT) > this.time){
-            setTime(received_time);
+        //LCD.drawString("rcdTime : " + String.format("%.4f", received_time), 0, 2);
+        if (Math.abs(received_time - this.getTime()) > DT){
+            try {
+                setTime(received_time);
+
+            }catch (java.lang.IndexOutOfBoundsException e){
+
+            }
+
         }
     }
 }
