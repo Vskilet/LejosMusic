@@ -6,7 +6,9 @@ import java.nio.ByteBuffer;
 
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
+import lejos.network.BroadcastListener;
 import lejos.network.BroadcastManager;
+import lejos.network.BroadcastReceiver;
 
 public class Launcher {
 	/**
@@ -25,12 +27,13 @@ public class Launcher {
 		final Track violin2 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score01/violin2.txt"));
 		final Track violoncello = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score01/violoncello.txt"));
 		final Track contrabass = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score01/contrabass.txt"));
-	
+
+
 		violin1.setBpm(90);
 		violin2.setBpm(90);
 		violoncello.setBpm(90);
 		contrabass.setBpm(90);
-		
+
 		final int button = Button.waitForAnyPress();
 		
 		if(button == Button.ID_UP) {
@@ -44,8 +47,14 @@ public class Launcher {
 		}
 	}
 	
-	private static void playTrack(Track track) {	
-		LCD.clear();
+	private static void playTrack(Track track) {
+        try {
+            BroadcastReceiver.getInstance().addListener(track);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
+        LCD.clear();
 		LCD.drawString("Playing...", 0, 2);
 
         BroadcastManager broadcast_manager = null;
@@ -59,14 +68,6 @@ public class Launcher {
             float track_time =  track.getTime();
 
 			LCD.drawString(String.format("%.4f", track_time), 0, 3);
-            
-            byte[] message = ByteBuffer.allocate(4).putFloat(track_time).array();
-
-            try {
-                broadcast_manager.broadcast(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
             track.play();
 		}
