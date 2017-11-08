@@ -46,7 +46,14 @@ public class Launcher {
 	}
 	
 	private static void playTrack(Track track) {
-	    boolean coordinator = true;
+        LCD.drawString("Chef a droite", 0, 2);
+        final int button = Button.waitForAnyPress();
+        boolean coordinator;
+        if(button == Button.ID_RIGHT) {
+            coordinator = true;
+        } else {
+            coordinator = false;
+        }
 
 	    if(!coordinator){
             try {
