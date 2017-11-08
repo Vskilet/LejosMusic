@@ -5,7 +5,6 @@ import java.net.SocketException;
 
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
-import lejos.network.BroadcastManager;
 import lejos.network.BroadcastReceiver;
 
 public class Launcher {
@@ -15,9 +14,6 @@ public class Launcher {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-
-        BroadcastManager test = BroadcastManager.getInstance();
-        test.broadcast("coucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucou".getBytes());
 
 		final TrackReader trackReader = new TrackReader();
 		
