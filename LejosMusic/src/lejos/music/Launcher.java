@@ -3,6 +3,7 @@ package lejos.music;
 import java.io.IOException;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
+import lejos.network.BroadcastManager;
 
 public class Launcher {
 	/**
@@ -11,7 +12,10 @@ public class Launcher {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		
+
+        BroadcastManager test = BroadcastManager.getInstance();
+        test.broadcast("coucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucoucou".getBytes());
+
 		final TrackReader trackReader = new TrackReader();
 		
 		final Track violin1 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score01/violin1.txt"));
