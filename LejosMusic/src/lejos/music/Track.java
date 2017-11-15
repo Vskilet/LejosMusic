@@ -18,6 +18,7 @@ public class Track implements BroadcastListener {
     public static final long WORKER = 2;
     public static final long DECENTRALISE = 3;
 
+    private long mode;
 
     private List<Note> notes = new ArrayList<>();
 	
@@ -109,7 +110,7 @@ public class Track implements BroadcastListener {
 	/**
 	 * Play the track
 	 */
-	public void play(long mode) {
+	public void play() {
 		if(this.position < this.notes.size()) {
 			final Note note;
 			
@@ -176,12 +177,20 @@ public class Track implements BroadcastListener {
         if (Math.abs(received_time - this.getTime()) > DT){
             try {
                 setTime(received_time);
-                play(WORKER);
+                play();
 
             }catch (java.lang.IndexOutOfBoundsException e){
 
             }
 
         }
+    }
+
+    public long getMode() {
+        return mode;
+    }
+
+    public void setMode(long mode) {
+        this.mode = mode;
     }
 }

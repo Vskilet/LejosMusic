@@ -48,16 +48,22 @@ public class Launcher {
 	}
 	
 	private static void playTrack(Track track) {
-        LCD.drawString("Chef a droite", 0, 2);
+        LCD.drawString("Worker <---> Chef", 0, 3);
+        LCD.drawString("|", 9, 4);
+        LCD.drawString("V", 9, 5);
+        LCD.drawString("P2P", 8, 6);
+
         final int button = Button.waitForAnyPress();
-        boolean coordinator;
+
         if(button == Button.ID_RIGHT) {
-            coordinator = true;
-        } else {
-            coordinator = false;
+            track.setMode(Track.COORDINATOR);
+        } else if(button == Button.ID_LEFT) {
+            track.setMode(Track.WORKER);
+        } else if(button == Button.ID_DOWN) {
+            track.setMode(Track.DECENTRALISE);
         }
 
-	    if(!coordinator){
+	    if(track.getMode() == Track.WORKER || track.getMode() == Track.DECENTRALISE){
             try {
                 BroadcastReceiver.getInstance().addListener(track);
             } catch (SocketException e) {
@@ -71,7 +77,7 @@ public class Launcher {
 		while(!track.isOver()) {
             float track_time =  track.getTime();
 			LCD.drawString(String.format("%.4f", track_time), 0, 3);
-            track.play(Track.COORDINATOR);
+            track.play();
 		}
 	}
 }
