@@ -71,7 +71,7 @@ public class Launcher {
 		while(!track.isOver()) {
             float track_time =  track.getTime();
 			LCD.drawString(String.format("%.4f", track_time), 0, 3);
-            track.play(coordinator);
+            track.play(Track.COORDINATOR);
 		}
 	}
 }

@@ -13,7 +13,13 @@ import lejos.network.BroadcastManager;
 import lejos.network.BroadcastListener;
 
 public class Track implements BroadcastListener {
-	private List<Note> notes = new ArrayList<>();
+
+    public static final long COORDINATOR = 1;
+    public static final long WORKER = 2;
+    public static final long DECENTRALISE = 3;
+
+
+    private List<Note> notes = new ArrayList<>();
 	
 	private int bpm = 60;
 	
@@ -103,7 +109,7 @@ public class Track implements BroadcastListener {
 	/**
 	 * Play the track
 	 */
-	public void play(boolean coordinator) {
+	public void play(long mode) {
 		if(this.position < this.notes.size()) {
 			final Note note;
 			
@@ -114,16 +120,16 @@ public class Track implements BroadcastListener {
 				note = this.notes.get(this.position);
 			}
 
-			if (coordinator){
-			    this.broadcast();
-            }
-
 			note.play(this.bpm, this.transpose);
 			this.time += note.getLen();
 			this.lastLen = note.getLen();
 			this.lastFreq = note.getFreq();
 			this.lastStartTime = new Date().getTime();
 			this.position++;
+
+			if (mode == COORDINATOR || mode == DECENTRALISE){
+                this.broadcast();
+            }
 		}
 	}
 
@@ -170,6 +176,7 @@ public class Track implements BroadcastListener {
         if (Math.abs(received_time - this.getTime()) > DT){
             try {
                 setTime(received_time);
+                play(WORKER);
 
             }catch (java.lang.IndexOutOfBoundsException e){
 
