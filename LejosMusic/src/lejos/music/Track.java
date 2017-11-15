@@ -186,7 +186,6 @@ public class Track implements BroadcastListener {
 
         if (mode == DECENTRALISE){
             list_time.put(message.getAddress(), received_time);
-
             Float moyenne = time;
 
             for (Float i : list_time.values()){
@@ -194,17 +193,14 @@ public class Track implements BroadcastListener {
             }
 
             moyenne/=list_time.size()+1;
-
             if (Math.abs(moyenne - this.getTime()) > DT) {
                 try {
                     setTime(moyenne);
                     play();
-
                 } catch (java.lang.IndexOutOfBoundsException e) {
 
                 }
             }
-
         } else {
             if (Math.abs(received_time - this.getTime()) > DT){
                 try {
@@ -214,7 +210,6 @@ public class Track implements BroadcastListener {
                 }catch (java.lang.IndexOutOfBoundsException e){
 
                 }
-
             }
         }
 
