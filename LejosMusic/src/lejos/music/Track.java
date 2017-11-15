@@ -1,16 +1,23 @@
 package lejos.music;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import lejos.hardware.Brick;
+import lejos.hardware.BrickFinder;
+import lejos.hardware.BrickInfo;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.network.BroadcastManager;
 import lejos.network.BroadcastListener;
+import lejos.remote.ev3.RemoteEV3;
 
 public class Track implements BroadcastListener {
 
@@ -21,7 +28,9 @@ public class Track implements BroadcastListener {
     private long mode;
 
     private List<Note> notes = new ArrayList<>();
-	
+
+    private HashMap<InetAddress, Float> list_time = new HashMap<>();
+
 	private int bpm = 60;
 	
 	private int position = 0;
@@ -170,20 +179,45 @@ public class Track implements BroadcastListener {
 	}
 
     @Override
-    public void onBroadcastReceived(byte[] message) {
+    public void onBroadcastReceived(DatagramPacket message) {
+
         float DT = 0.1f;
-        float received_time = ByteBuffer.wrap(message).getFloat();
-        //LCD.drawString("rcdTime : " + String.format("%.4f", received_time), 0, 2);
-        if (Math.abs(received_time - this.getTime()) > DT){
-            try {
-                setTime(received_time);
-                play();
+        float received_time = ByteBuffer.wrap(message.getData()).getFloat();
 
-            }catch (java.lang.IndexOutOfBoundsException e){
+        if (mode == DECENTRALISE){
+            list_time.put(message.getAddress(), received_time);
 
+            Float moyenne = time;
+
+            for (Float i : list_time.values()){
+                moyenne += i;
             }
 
+            moyenne/=list_time.size()+1;
+
+            if (Math.abs(moyenne - this.getTime()) > DT) {
+                try {
+                    setTime(moyenne);
+                    play();
+
+                } catch (java.lang.IndexOutOfBoundsException e) {
+
+                }
+            }
+
+        } else {
+            if (Math.abs(received_time - this.getTime()) > DT){
+                try {
+                    setTime(received_time);
+                    play();
+
+                }catch (java.lang.IndexOutOfBoundsException e){
+
+                }
+
+            }
         }
+
     }
 
     public long getMode() {

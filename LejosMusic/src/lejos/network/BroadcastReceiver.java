@@ -69,7 +69,7 @@ public class BroadcastReceiver implements AutoCloseable {
 	 * Fire the broadcast received event
 	 * @param message the raw message received
 	 */
-	protected void fireBroadcastReceived(byte[] message) {
+	protected void fireBroadcastReceived(DatagramPacket message) {
 		for(BroadcastListener listener : this.listeners) {
 			listener.onBroadcastReceived(message);
 		}
@@ -100,7 +100,7 @@ public class BroadcastReceiver implements AutoCloseable {
 				final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				try {
 					this.broadcastReceiver.getSocket().receive(packet);
-					this.broadcastReceiver.fireBroadcastReceived(packet.getData());
+					this.broadcastReceiver.fireBroadcastReceived(packet);
 				} catch (IOException e) {
 					//
 				}

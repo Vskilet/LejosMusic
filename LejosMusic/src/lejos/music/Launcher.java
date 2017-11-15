@@ -26,7 +26,6 @@ public class Launcher {
 		final Track track02 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score02/track02.txt"));
 		final Track track03 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score02/track03.txt"));
 
-
 		violin1.setBpm(90);
 		violin2.setBpm(90);
 		violoncello.setBpm(90);
