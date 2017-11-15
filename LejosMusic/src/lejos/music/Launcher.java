@@ -22,22 +22,28 @@ public class Launcher {
 		final Track violoncello = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score01/violoncello.txt"));
 		final Track contrabass = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score01/contrabass.txt"));
 
+		final Track track01 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score02/track01.txt"));
+		final Track track02 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score02/track02.txt"));
+		final Track track03 = trackReader.read(Launcher.class.getResourceAsStream("/lejos/music/samples/score02/track03.txt"));
+
 
 		violin1.setBpm(90);
 		violin2.setBpm(90);
 		violoncello.setBpm(90);
 		contrabass.setBpm(90);
 
+		track01.setBpm(90);
+		track02.setBpm(90);
+		track03.setBpm(90);
+
 		final int button = Button.waitForAnyPress();
 		
 		if(button == Button.ID_UP) {
-			playTrack(violin1);
+			playTrack(track01);
 		} else if(button == Button.ID_RIGHT) {
-			playTrack(violin2);
+			playTrack(track02);
 		} else if(button == Button.ID_LEFT) {
-			playTrack(violoncello);
-		} else if(button == Button.ID_DOWN) {
-			playTrack(contrabass);
+			playTrack(track03);
 		}
 	}
 	
